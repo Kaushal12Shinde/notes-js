@@ -1,7 +1,7 @@
 import React from "react";
 
-import { Heading, Flex, Text, Button, Avatar, RevealFx, Column, Badge, Row, Meta, Schema } from "@once-ui-system/core";
-import { home, about, person, newsletter, baseURL, routes } from "@/resources";
+import { Heading, Flex, Column, Schema } from "@once-ui-system/core";
+import { home, about, person, baseURL, routes } from "@/resources";
 import { Mailchimp } from "@/components";
 import { Posts } from "@/components/blog/Posts";
 
