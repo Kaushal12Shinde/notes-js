@@ -1,0 +1,246 @@
+---
+title: "Map, Filter and educe"
+publishedAt: "2025-07-24"
+summary: "Learn how to use map(), filter(), and reduce() in JavaScript to manipulate and transform arrays. This guide covers each method with examples, custom polyfills, and a real-world problem to practice chaining array methods effectively."
+tag: "Array Methods"
+---
+
+## Map
+
+The map() is an array method that creates a new array by applying a callback function to each element of the original array.  
+Does not mutate the original array.  
+Returns a new array of the same length.  
+
+<Column fillWidth gap="-1" marginBottom="16" marginTop="8">
+<CodeBlock
+    radius="l"
+    codes={[
+      {
+        code:
+`
+const nums = [1,2,3,4,5];
+
+const multiplyThree = nums.map((num) => num*3);
+
+console.log(multiplyThree); //[ 3, 6, 9, 12, 15 ]
+
+`,
+        language: "js",
+        label: "Array.map()"
+      }
+    ]}
+/>
+</Column>
+
+### Polyfill - Map
+
+<Column fillWidth gap="-1" marginBottom="16" marginTop="8">
+<CodeBlock
+    radius="l"
+    codes={[
+      {
+        code:
+`
+const nums = [1,2,3,4,5];
+
+Array.prototype.myMap = function(callback){
+    let newArr = [];
+    for(let i=0; i<this.length; i++){
+        newArr.push(callback(this[i]));
+    }
+    return newArr;
+}
+
+function square(num){
+    return num*num;
+}
+
+function addTwo(num){
+    return num+2;
+}
+
+console.log(nums.myMap(square)); //[ 1, 4, 9, 16, 25 ]
+console.log(nums.myMap(addTwo)); //[ 3, 4, 5, 6, 7 ]
+
+`,
+        language: "js",
+        label: "Array.prototype.myMap()"
+      }
+    ]}
+/>
+</Column>
+
+## Filter
+
+The filter() method creates a new array with all elements that pass the test implemented by the provided function. 
+It returns a filtered array based on the condition specified in the callback function, 
+where only elements that satisfy the condition are included.
+
+<Column fillWidth gap="-1" marginBottom="16" marginTop="8">
+<CodeBlock
+    radius="l"
+    codes={[
+      {
+        code:
+`
+const nums = [1,2,3,4,5];
+
+const numsLessThanFour = nums.filter((num) => num<4);
+
+console.log(numsLessThanFour); // [1,2,3]
+
+`,
+        language: "js",
+        label: "Array.filter()"
+      }
+    ]}
+/>
+</Column>
+
+### Polyfill - Filter
+
+<Column fillWidth gap="-1" marginBottom="16" marginTop="8">
+<CodeBlock
+    radius="l"
+    codes={[
+      {
+        code:
+`
+const nums = [1,2,3,4,5];
+
+Array.prototype.myFilter = function(callback){
+    let newArr = [];
+    for(let i=0; i<this.length; i++){
+        if(callback([this[i]])){
+            newArr.push(this[i]);
+        }
+    }
+    return newArr;
+}
+
+function lessThanFour(num){
+    return num<4;
+}
+
+console.log(nums.myFilter(lessThanFour));
+
+`,
+        language: "js",
+        label: "Array.prototype.myFilter()"
+      }
+    ]}
+/>
+</Column>
+
+
+## Reduce
+
+The reduce() array method used to reduce all elements in an array to a single value by applying a callback function. 
+It's often used for aggregating data, such as calculating a sum, by iterating through the array and accumulating 
+the results based on the logic in the callback function.
+
+<Column fillWidth gap="-1" marginBottom="16" marginTop="8">
+<CodeBlock
+    radius="l"
+    codes={[
+      {
+        code:
+`
+const nums = [1,2,3,4,5];
+
+const sumOfNums = nums.reduce((acc, num)=>{
+    return num+acc;
+},1)
+
+console.log(sumOfNums); // 16
+
+`,
+        language: "js",
+        label: "Array.reduce()"
+      }
+    ]}
+/>
+</Column>
+
+### Polyfill - Reduce
+
+<Column fillWidth gap="-1" marginBottom="16" marginTop="8">
+<CodeBlock
+    radius="l"
+    codes={[
+      {
+        code:
+`
+const nums = [1,2,3,4,5];
+
+Array.prototype.myReducer = function(callback, initValue){
+
+    let accumulator = initValue;
+    for(let i=0; i<this.length; i++){
+        accumulator = callback(this[i],accumulator);
+    }
+    return accumulator;
+
+}
+
+function sum(num, acc){
+    return num+acc;
+}
+
+function multiply(num, acc){
+    return num * acc;
+}
+
+console.log(nums.myReducer(sum,0)); // 15
+console.log(nums.myReducer(multiply,1)); // 120
+
+`,
+        language: "js",
+        label: "Array.prototype.myReduce()"
+      }
+    ]}
+/>
+</Column>
+
+
+
+## Problem
+
+Return Total Marks for Graduates with marks greater than 60  
+After 20 Marks have been added to those who have scored less than 60
+
+<Column fillWidth gap="-1" marginBottom="16" marginTop="8">
+<CodeBlock
+    radius="l"
+    codes={[
+      {
+        code:
+`
+let graduates = [ 
+    { name: "Kaushal", rollNumber:31, marks: 80},
+    { name: "Sujal", rollNumber:15, marks: 69},
+    { name: "Rupesh", rollNumber:16, marks: 35},
+    { name: "Rani", rollNumber:7, marks: 55},
+]
+
+const totalMarks = graduates.map((grad) => {
+    if(grad.marks < 60){
+        grad.marks += 20;
+    }
+    return grad;
+}) 
+.filter((grad) => grad.marks > 60)
+.reduce((acc, grad) => {
+    return acc + grad.marks;
+},0)
+
+console.log(totalMarks);
+
+`,
+        language: "js",
+        label: "Array.prototype.myReduce()"
+      }
+    ]}
+/>
+</Column>
+
