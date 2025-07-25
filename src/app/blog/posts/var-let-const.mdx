@@ -1,0 +1,162 @@
+---
+title: "JavaScript: var, let, const"
+publishedAt: "2025-07-25"
+summary: "Learn the key differences between var, let, and const in JavaScript, including how they behave in terms of scope, hoisting, shadowing, and execution context. This guide breaks down concepts like block vs function scope, Temporal Dead Zone (TDZ), and the two phases of execution with easy-to-understand code examples."
+tag: "JavaScript Basics"
+---
+
+## Scope
+
+Scope is a certain region of a program where a defined variable exists and can be recognized.  
+Beyond that region, it cannot be accessed or recognized.
+
+There are multiple types of scopes:
+
+1. **Global Scope** – Accessible everywhere in the code.
+2. **Function Scope** – Variable is accessible only within the function it's declared in.
+3. **Block Scope** – Variables declared with let or const are limited to the block {} in which they are defined (like in loops, if statements).
+
+<Column fillWidth gap="-1" marginBottom="16" marginTop="8">
+<CodeBlock
+    radius="l"
+    codes={[
+      {
+        code:
+`
+let a = 10; // Global
+
+function test() {
+    let b = 20; // Function scope
+    if (true) {
+        let c = 30; // Block scope
+        console.log(a, b, c); // ✅ all accessible here
+    }
+    // console.log(c); ❌ Error: c is block-scoped
+}
+
+`,
+        language: "js",
+        label: "Scope"
+      }
+    ]}
+/>
+</Column>
+
+
+## Variable Shadowing
+
+Variable shadowing occurs when a variable declared in an inner scope (block/function) has the same name as one in an outer scope. 
+The inner one "shadows" the outer within its scope.
+
+1. var → let shadowing ✅ Allowed
+<Column fillWidth gap="-1" marginBottom="16" marginTop="8">
+<CodeBlock
+    radius="l"
+    codes={[
+      {
+        code:
+`
+var x = 10;
+{
+    let x = 20; // Shadows outer x
+    console.log(x); // 20
+}
+console.log(x); // 10
+
+`,
+        language: "js",
+        label: "var → let"
+      }
+    ]}
+/>
+</Column>
+var x is hoisted and initialized with undefined.  
+let x exists only inside the block — has its own scope.  
+So no conflict → safe shadowing.  
+
+2. let/const → var shadowing ❌ Not Allowed  
+This causes a SyntaxError because var is hoisted and conflicts with block-scoped let/const.
+<Column fillWidth gap="-1" marginBottom="16" marginTop="8">
+<CodeBlock
+    radius="l"
+    codes={[
+      {
+        code:
+`
+let x = 10;
+{
+   // var x = 20; // ❌ SyntaxError
+}
+
+`,
+        language: "js",
+        label: "let/const → var"
+      }
+    ]}
+/>
+</Column>
+let x is block-scoped and in a Temporal Dead Zone (TDZ) until it's initialized.  
+var x is hoisted to the top of its function/block.  
+Hoisting makes var x exist before the block executes — conflicts with the TDZ of let x.  
+Results in SyntaxError: Cannot redeclare block-scoped variable.  
+
+
+## var, let, const
+var can be Redecalerd and Reassigned  
+let cannot be redeclare and it allows Reassignment  
+const can not be Redecalerd and Reassigned  
+
+
+## Hoisting
+
+Hoisting is a behavior in JavaScript where variable and function declarations are moved to the top of their scope before the code executes.  
+Variables declared with var are hoisted but initialized as undefined.  
+Variables declared with let and const are hoisted but NOT initialized. (present in Temporal Dead Zone)  
+Functions are hoisted with their full definition.  
+<Column fillWidth gap="-1" marginBottom="16" marginTop="8">
+<CodeBlock
+    radius="l"
+    codes={[
+      {
+        code:
+`
+console.log(a); // a - undefined
+console.log(b); // Error - TDZ
+console.log(c); // Error - TDZ
+
+var a = 10;
+let b = 20;
+const c = 30;
+
+`,
+        language: "js",
+        label: "Hoisting"
+      }
+    ]}
+/>
+</Column>
+
+Temporal Dead Zone (TDZ):  
+    TDZ is a specific behavior related to variables declared using let and const. It refers to the period between the start of the block scope and the actual declaration of the variable.  
+    During the TDZ, accessing the variable will result in a ReferenceError.  
+
+
+## Excution Context
+
+The Execution Context (EC) is the default environment where JavaScript code runs.  
+It is created when the JavaScript file starts executing.  
+In bowser window object and in node js global object acts as GEC.  
+
+Two phase of code Execution.
+
+1. **Creation Phase / Memory Allocation Phase** -    
+    Before Execution JS Engiene scans the code where it creates memory space for all the variables and functions  
+    Function declarations are stored with their full definition.  
+    Variables (var) are stored as undefined (hoisting).  
+    let and const are stored but remain uninitialized (Temporal Dead Zone).  
+2. **Execution Phase** -  
+    The code runs line by line.  
+    Variables get their assigned values.  
+    Function calls are executed.  
+
+

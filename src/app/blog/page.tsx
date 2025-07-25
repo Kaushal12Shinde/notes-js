@@ -15,7 +15,7 @@ export async function generateMetadata() {
 
 export default function Blog() {
   return (
-    <Column maxWidth="s">
+    <Column maxWidth="m">
       <Schema
         as="blogPosting"
         baseURL={baseURL}
@@ -34,11 +34,9 @@ export default function Blog() {
       </Heading>
       <Column
 				fillWidth flex={1}>
-				<Posts range={[1,1]} thumbnail direction="column"/>
-				<Posts range={[2,3]} thumbnail/>
-				<Posts range={[4]} columns="2"/>
+				<Posts  columns="2"/>
 			</Column>
-      {newsletter.display && <Mailchimp newsletter={newsletter} />}
+      {/* {newsletter.display && <Mailchimp newsletter={newsletter} />} */}
     </Column>
   );
 }
